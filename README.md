@@ -8,7 +8,8 @@ Currently, LAVI and ABBA work on Matlab, with the Curve Fitting Toolbox.
 Although LAVI does not depend on the freely-available toolbox [Fieldtrip](https://www.fieldtriptoolbox.org/), some functions are inspired by Fieldtrip. Therefore, when using LAVI, please cite also the Fieldtrip toolbox (see reference below).
 
 ## Input
-The main function, Prepare_LAVI, takes an N_channel x N_timepoints data (examplary data available here as data.mat), and a configuration structure, including the frequencies of interest, sampling rate, lag duration and wavelt width.   
+The main function, Prepare_LAVI, takes an N_channel x N_timepoints raw electrophysiological data (EEG, MEG, LFP, etc. Examplary EEG data available here as data.mat), and a configuration structure, including the frequencies of interest, sampling rate, lag duration and wavelt width.  
+The data should be preprocessed according to conventional standards, that is, removed eye-blinks and 50/60 hz hum. Other artifacts, such as muscle artifacts, can be replaced with NaNs. We tested the algorhythm successfully with resting-state data with eyes closed without preprocessing. 
 
 ## How to use
 Download the functions, and add the folder containing them to your Matlab path.  
