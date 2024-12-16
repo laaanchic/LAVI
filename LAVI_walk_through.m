@@ -49,6 +49,8 @@ legend(data.label)
 %       data.
 %    c. leave empty. In this case, the bands will be found, but without
 %       meaningful statistical inference.
+%    For more details, see supplementary text - 'Parametrical effects on 
+%    rhythmicity measures' and supplementary figure S5 of the original paper.
 % 5. perFreq: a boolean defining whether the siginificance level per
 %    frequency (1), or as the minimum/ maximum over all frequencies (0,
 %    default).
