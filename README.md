@@ -13,8 +13,8 @@ The data should be preprocessed according to conventional standards, that is, re
 
 ## How to use
 Download the functions, and add the folder containing them to your Matlab path.  
-The main functions to compute LAVI and ABBA are Prepare_LAVI.m and ABBA.m . Both functions contain help sections explaining their inuputs and outputs.  
-For quick implenetation of the main functionalities of LAVI and ABBA, use LAVI_main.m .  
+The main functions to compute LAVI and ABBA are Prepare_LAVI.m and ABBA.m. Both functions contain help sections explaining their inuputs and outputs.  
+For quick implenetation of the main functionalities of LAVI and ABBA, use LAVI_main.m.  
 For an annotated, step-by-step, and detailed description of how to use LAVI and ABBA, see the script LAVI_walk_through.m (or live script LAVI_walk_through.mlx)
 
 ## References
