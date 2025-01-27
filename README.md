@@ -9,7 +9,7 @@ Although LAVI does not depend on the freely-available toolbox [Fieldtrip](https:
 
 ## Input
 The main function, Prepare_LAVI, takes an N_channel x N_timepoints raw electrophysiological data (EEG, MEG, LFP, etc. Examplary EEG data available here as data.mat), and a configuration structure, including the frequencies of interest, sampling rate, lag duration and wavelet width.  
-The data should be preprocessed according to conventional standards, that is, removed eye-blinks and 50/60 hz hum. Other artifacts, such as muscle artifacts, can be replaced with NaNs. We tested the algorithm successfully with resting-state data with eyes closed without preprocessing. 
+The data should be preprocessed according to conventional standards, for example in EEG, with eye-blinks and 50/60 hz line noise removed. Other artifacts, such as muscle artifacts, can be replaced with NaNs. We tested the algorithm successfully with resting-state data with eyes closed without preprocessing. 
 
 ## How to use
 Download the functions, and add the folder containing them to your Matlab path.  
