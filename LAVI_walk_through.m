@@ -1,5 +1,4 @@
 %% LAVI walk-through
-%
 % This script demonstrates how to use LAVI to calculate the rhythmicity profile 
 % of a multi-channel dataset, and how to detect the bands. Finally it demonstrates 
 % the three possibilities of statistical inference: a. using a pre-computed "look-up 
