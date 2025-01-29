@@ -141,8 +141,9 @@ cfg.durs        = durs;       % duration of each simulation, in seconds.
 cfg.foi         = foi;        % frequencies of interest. Should match the foi used for the real data.
 PINK            = computePinkLAVI(cfg,dat(choi,:)); % dimord: rep_freq_chan
 % Calculate LAVI of the pink-noise simulations
-pink = permute(PINK,[3,2,1]); % dimord: chan_freq_rep
+pink = permute(PINK,[3,2,1]);                    % dimord: chan_freq_rep
 sig_lim = cat(3,min(pink,[],3), max(pink,[],3)); % dimord: chan_freq_min/max
+alpha_range = [6 14];                            % same as in option A
 [borders2,~,sigVect2] = ABBA(LAVI, foi, alpha_range, sig_lim, 0);
 %% Option C: no meaningful statistical inference
 
