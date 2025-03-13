@@ -42,7 +42,7 @@ function [y, errorAmplitude, errorSpec] = iaaft_loop_1d(fourierCoeff, sortedValu
 % Settings
 errorThresshold = 2e-4; %
 timeThresshold  = Inf;  % Time in seconds or Inf to remove this condition
-speedThresshold = 1e-5; % Minimal convergence speed in the maximum error.
+speedThresshold = 1e-7; % Minimal convergence speed in the maximum error.
 verbose = 0; % comments on screen
 makePlots = 0; % Best used together with debugging.
 
@@ -94,7 +94,7 @@ while ( (errorAmplitude > errorThresshold | errorSpec > errorThresshold) & (cput
         pause(0.01)
     end
     totalError = errorSpec + errorAmplitude;
-    speed = (oldTotalError - totalError) / totalError;
+    speed = abs((oldTotalError - totalError) / totalError);
     if ( verbose ), totalError, speed, end
     oldTotalError = totalError;
 end
