@@ -41,14 +41,21 @@ else
     t_.reps = tic;
     prev = fprintf('  ');
     for ch = 1:size(data,1)
-        EEG = data(ch,:);
-        EEG = EEG-mean(EEG); % demean
-        %     sorted_values = sort(EEG); % use this when using the values of the original signal. Caution: sensitive to artifacts!
-%         fourier_coeff = abs(ifft(EEG));
-        [coefsIntoSurr, fito] = get_pink_iafft_coefs_pow (EEG,w,foi,fs);
         surrLAVI = nan(pmtr.Pink_reps,length(foi));
-        rng = prctile(EEG,99.9)-prctile(EEG,0.01);%range(EEG); % use this  if using the option of random
-        offset = prctile(EEG,0.01);%min(EEG); % values that are offsetted to the original EEG
+        EEG = data(ch,:);
+        if ~any(isnan(EEG))
+            EEG = EEG-mean(EEG); % demean
+            sorted_values = sort(EEG); % use this when using the values of the original signal. Caution: sensitive to artifacts!
+            %         fourier_coeff = abs(ifft(EEG));
+            coefsIntoSurr = get_pink_iafft_coefs_pow (EEG,w,foi,fs);            
+            rng = prctile(EEG,99.9)-prctile(EEG,0.01);%range(EEG); % use this  if using the option of random
+            offset = prctile(EEG,0.01);%min(EEG); % values that are offsetted to the original EEG
+        else
+            EEG = EEG - nanmean(EEG);
+            coefsIntoSurr = get_pink_iafft_coefs_pow (EEG,w,foi,fs);
+            sorted_values = sort(EEG);
+            sorted_values(isnan(sorted_values)) = 0; % least bad solution, but better not use sorted values if there are nans
+        end
         
         for ri = 1:pmtr.Pink_reps
             str = ['Running PINK ANALYSIS' ' Channel ' num2str(ch) '/' num2str(N.chan)...
@@ -57,7 +64,7 @@ else
             fprintf(repmat('\b',1,prev))
             prev = fprintf(str);
             
-            %         pinkNoise = iaaft_loop_1d(coefsIntoSurr, sorted_values); % using the values of the original signal
+%             pinkNoise = iaaft_loop_1d(coefsIntoSurr, sorted_values); % using the values of the original signal
             pinkNoise = iaaft_loop_1d(coefsIntoSurr, sort(rand(size(EEG)))); % using random signal and adjusting to range and offset
             %             pinkNoise = pinkNoise*rng + offset; % get the pink noise to the values of te EEG. Not super importnat for the LAVI analysis
             %         [pinkx,PINKfrq] = pwelch(pinkNoise,w,[],[],fs); % to document the powr of each pink simulation.2-sec window, whole session
