@@ -141,6 +141,7 @@ cfg.Pink_reps   = pink_reps;  % number of repetitions (pink-noise instantiations
 cfg.durs        = durs;       % duration of each simulation, in seconds.
 cfg.foi         = foi;        % frequencies of interest. Should match the foi used for the real data.
 cfg.maxIterate  = maxIterate; % the maximal number of iteration in the Pink simulation iterative loop
+
 PINK            = computePinkLAVI(cfg,dat(choi,:)); % dimord: rep_freq_chan
 % Calculate LAVI of the pink-noise simulations
 pink = permute(PINK,[3,2,1]);                    % dimord: chan_freq_rep
