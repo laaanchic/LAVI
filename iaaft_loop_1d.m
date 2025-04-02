@@ -1,9 +1,11 @@
-function [y, errorAmplitude, errorSpec] = iaaft_loop_1d(fourierCoeff, sortedValues, initialisationStr, makePlots, template)
+function [y, reps, errorAmplitude, errorSpec] = iaaft_loop_1d(fourierCoeff, sortedValues, maxReps)
 % INPUT: 
 % fourierCoeff:   The 1 dimensional Fourier coefficients that describe the
 %                 structure and implicitely pass the size of the matrix
 % sortedValues:   A vector with all the wanted amplitudes (e.g. LWC of LWP
 %                 values) sorted in acending order.
+% maxReps:        An integer, maximal number of repetitions before exiting
+%                 the function if parametrical cinditions are not met
 % OUTPUT:
 % y:              The 1D IAAFT surrogate time series
 % errorAmplitude: The amount of addaption that was made in the last
@@ -47,9 +49,11 @@ verbose = 0; % comments on screen
 makePlots = 0; % Best used together with debugging.
 
 % Initialse function
-noValues = size(fourierCoeff);
+% noValues = size(fourierCoeff);
 errorAmplitude = 1;
 errorSpec = 1;
+if nargin<3, maxReps = []; end
+if isempty(maxReps), maxReps = 1000; end % maximal number of repetitions
 oldTotalError = 100;
 speed = 1;
 standardDeviation = std(sortedValues);
@@ -57,16 +61,18 @@ t = cputime;
 
 % The method starts with a randomized uncorrelated time series y with the pdf of
 % sorted_values
-[dummy,index]=sort(rand(size(sortedValues)));
+[~,index]=sort(rand(size(sortedValues)));
 y(index) = sortedValues;
+reps = 0;
 
 % Main intative loop
-while ( (errorAmplitude > errorThresshold | errorSpec > errorThresshold) & (cputime-t < timeThresshold) & (speed > speedThresshold) )
+while ( (errorAmplitude > errorThresshold || errorSpec > errorThresshold) && (cputime-t < timeThresshold) && (speed > speedThresshold) && reps < maxReps)
+    reps = reps + 1; % repetition counter
     % addapt the power spectrum
     oldSurrogate = y;    
     x=ifft(y);
     phase = angle(x);
-    x = fourierCoeff .* exp(i*phase);
+    x = fourierCoeff .* exp(1i*phase);
     y = fft(x);
     difference=mean(mean(abs(real(y)-real(oldSurrogate))));
     errorSpec = difference/standardDeviation;
@@ -81,7 +87,7 @@ while ( (errorAmplitude > errorThresshold | errorSpec > errorThresshold) & (cput
         
     % addept the amplitude distribution
     oldSurrogate = y;
-    [dummy,index]=sort(real(y));
+    [~,index]=sort(real(y));
     y(index)=sortedValues;
     difference=mean(mean(abs(real(y)-real(oldSurrogate))));
     errorAmplitude = difference/standardDeviation;
