@@ -45,6 +45,7 @@ function [BORDERS,varNames,SIGVECT] = ABBA(LAVI,foi,alpha_range,SIGLIM,perFreq)
 %          with positive numbers. Frequencies with significantly low LAVI 
 %          are assigned with negative numbers. Non-significant frequencies
 %          are assigned with 0.
+%
 
 if nargin<3 || isempty(alpha_range), alpha_range = [6 14]; end
 
