@@ -16,6 +16,7 @@ if ~isfield(cfg,'lag'); cfg.lag = 1.5; end
 if ~isfield(cfg,'width'); cfg.width = 5; end
 T = size(data,2)/cfg.fs;
 if ~isfield(cfg,'durs'); cfg.durs = T; end % duration (in sec) of each simulation
+if ~isfield(cfg,'maxIterate'); cfg.maxIterate = 1000; end % Maxilmal number of iterations in pink-noise simulation
 
 if cfg.Pink_reps==0 || cfg.durs==0
     PINK = [];
@@ -57,19 +58,20 @@ else
             sorted_values(isnan(sorted_values)) = 0; % least bad solution, but better not use sorted values if there are nans
         end
         
-        for ri = 1:pmtr.Pink_reps
-            str = ['Running PINK ANALYSIS' ' Channel ' num2str(ch) '/' num2str(N.chan)...
-                ' repeat ' num2str(ri) '/' num2str(pmtr.Pink_reps),...
-                '. So far analysis took ' num2str(toc(t_.reps),4) ' seconds'];
+        for ri = 1:pmtr.Pink_reps            
+%             [pinkNoise, reps] = iaaft_loop_1d(coefsIntoSurr, sorted_values, cfg.maxIterate); % using the values of the original signal
+            [pinkNoise, nIter] = iaaft_loop_1d(coefsIntoSurr, sort(rand(size(EEG))), cfg.maxIterate); % using random signal and adjusting to range and offset
+%             pinkNoise = pinkNoise*rng + offset; % get the pink noise to the values of te EEG. Not super importnat for the LAVI analysis
+%             [pinkx,PINKfrq] = pwelch(pinkNoise,w,[],[],fs); % to document the powr of each pink simulation.2-sec window, whole session
+%             PINKpow(ri,:) = pinkx;%*pxx(i1)/pinkx(i1); % Uncomment if you want to document the power spectra of all pink simulations
+%             PINKnoise(ri,:) = pinkNoise; % Uncomment if you want to document all the pink noises
+            str = sprintf('Running PINK ANALYSIS, Channel %i/%i repeat %i/%i (%i iterations). So far the analysis took %.2f seconds.',...
+                ch, N.chan, ri, pmtr.Pink_reps, nIter, toc(t_.reps));
+%             str = ['Running PINK ANALYSIS' ' Channel ' num2str(ch) '/' num2str(N.chan)...
+%                 ' repeat ' num2str(ri) '/' num2str(pmtr.Pink_reps),...
+%                 '. So far analysis took ' num2str(toc(t_.reps),4) ' seconds'];            
             fprintf(repmat('\b',1,prev))
-            prev = fprintf(str);
-            
-%             pinkNoise = iaaft_loop_1d(coefsIntoSurr, sorted_values); % using the values of the original signal
-            pinkNoise = iaaft_loop_1d(coefsIntoSurr, sort(rand(size(EEG)))); % using random signal and adjusting to range and offset
-            %             pinkNoise = pinkNoise*rng + offset; % get the pink noise to the values of te EEG. Not super importnat for the LAVI analysis
-            %         [pinkx,PINKfrq] = pwelch(pinkNoise,w,[],[],fs); % to document the powr of each pink simulation.2-sec window, whole session
-            %         PINKpow(ri,:) = pinkx;%*pxx(i1)/pinkx(i1); % Uncomment if you want to document the power spectra of all pink simulations
-            %         PINKnoise(ri,:) = pinkNoise; % Uncomment if you want to document all the pink noises
+            prev = fprintf(str);            
             
             for fi = 1:N.freq
                 f = foi(fi);                
@@ -79,6 +81,6 @@ else
         end
         PINK(:,:,ch) = surrLAVI;
     end    
-    disp('.');
+    fprintf('\nFinished PINK analysis.\n');
 end
 end

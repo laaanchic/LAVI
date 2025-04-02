@@ -25,7 +25,7 @@ function [spectrum, foi, toi] = tfrLight(data, fsample, foi, width, verbose)
 % $Id$
 
 % set the default for screen output
-ft_warning off
+try ft_warning off; end
 if nargin<5, verbose=1; end
 
 % Set n's
@@ -167,6 +167,6 @@ for ifreqoi = 1:nfreqoi
         spectrum(:,ifreqoi,reqtimeboiind) = dum;
     end
 end
-ft_warning on
+try ft_warning on; end
 end
 
