@@ -23,6 +23,7 @@ lag         = 1.5;                  % lag between the signal and its copy (in cy
 width       = 5;                    % wavelet width (in cycles, default = 5)
 pink_reps   = 20;                   % number of simulations created per channel. Default = 20.
 durs        = 60;                   % the duration (in seconds) of each simulation. Default: the duration of the original signal
+maxIterate  = 1000;                 % the maximal number of iteration in the Pink simulation iterative loop
 choi        = 1:size(data.trial,1); % use this to choose your channels of interest.
 %% Calculate LAVI of the data
 % The actual calculation of LAVI is done with the function *Prepare_LAVI*.
@@ -139,6 +140,7 @@ cfg             =[];
 cfg.Pink_reps   = pink_reps;  % number of repetitions (pink-noise instantiations).
 cfg.durs        = durs;       % duration of each simulation, in seconds.
 cfg.foi         = foi;        % frequencies of interest. Should match the foi used for the real data.
+cfg.maxIterate  = maxIterate; % the maximal number of iteration in the Pink simulation iterative loop
 PINK            = computePinkLAVI(cfg,dat(choi,:)); % dimord: rep_freq_chan
 % Calculate LAVI of the pink-noise simulations
 pink = permute(PINK,[3,2,1]);                    % dimord: chan_freq_rep
