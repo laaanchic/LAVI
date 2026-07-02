@@ -2,7 +2,7 @@
 
 Python-based version of the **LAVI toolbox**, which was programmed in Matlab. This package prioritises **numerical equivalence with the MATLAB implementation** over *pythonic* style. In several places the code deliberately mirrors MATLAB behaviour, including rounding, indexing conventions, padding, wavelet construction and edge handling. However, the code has a different organization as the original toolbox, but keeps the original names of the funtions.
 
-The original **LAVI Toolbox** was created to compute the rhythmicity profile and automatic band detection (both sustained and transient bands) of electrophysiological data, introduced in [Universal rhythmic architecture uncovers distinct modes of neural dynamics](https://www.biorxiv.org/content/10.1101/2024.12.05.627113v1) (Karvat et al 2024).
+The original **LAVI Toolbox** was created to compute the rhythmicity profile and automatic band detection (both sustained and transient bands) of electrophysiological data, introduced in [Universal rhythmic architecture uncovers two modes of neural dynamics](https://www.nature.com/articles/s41467-026-73553-8) (Karvat et al 2026).
 
 This repository includes Jupyter notebooks with walkthrough examples that illustrate how to apply the functions to data matrices and MNE-Python data objects. They also contain validation steps on small example datasets, comparing the outputs between Matlab and Python implementations. In the validation tests, the band peaks and borders were identical, while the LAVI indexes differ from the 5th-6th decimal digit on. LAVI profiles on figures look the same.
 
@@ -40,7 +40,13 @@ This installs the package into your current Python environment while keeping it 
 
 ### Running the tests
 
-To verify that the installation was successful, run the test suite from the project root:
+To verify that the installation was successful, first install pytest:
+
+```bash
+pip install pytest
+```
+
+Then, run the test suite from the project root:
 
 ```bash
 pytest
@@ -93,3 +99,9 @@ MNE is optional and is only needed for `prepare_lavi_mne()` workflows.
 - The convolution step in `tfr_light()` intentionally uses `scipy.signal.convolve(..., mode="same", method="direct")`; it has not been replaced with an FFT or alternative alignment.
 - Indices returned by `abba()` are 0-based by default. Use `matlab_indices=True` for MATLAB-style 1-based indices in the `BegI`, `EndI` and `PeakI` columns.
 - `general_sig_lims()` can be very slow, as in the original MATLAB script.
+
+## References
+When using this toolbox please cite the following publications:
+1. Karvat, G., Crespo-García, M., Vishne, G., Anderson, M. & Landau, A. N. (2026). Universal rhythmic architecture uncovers two modes of neural dynamics. Nature Communications. https://doi.org/10.1038/s41467-026-73553-8.
+2. Oostenveld, R., Fries, P., Maris, E. & Schoffelen, J.-M. FieldTrip: Open Source Software for Advanced Analysis of MEG, EEG, and Invasive Electrophysiological Data. Intell. Neuroscience 2011, 1:1-1:9 (2011).
+3. Venema, V., Ament, F. & Simmer, C. A Stochastic Iterative Amplitude Adjusted Fourier Transform algorithm with improved accuracy. Nonlinear Processes in Geophysics 13, 321–328 (2006).
