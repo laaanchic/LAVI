@@ -1,5 +1,0 @@
-numpy
-scipy
-matplotlib
-# Optional for MNE workflows:
-# mne
