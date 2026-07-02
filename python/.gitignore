@@ -1,0 +1,9 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Package metadata
+*.egg-info/
+
+# Pytest
+.pytest_cache/

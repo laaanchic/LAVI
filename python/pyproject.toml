@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lavi-python"
+version = "0.1.1"
+description = "Python port of the MATLAB LAVI toolbox, prioritising numerical equivalence"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {file = "LICENSE.original"}
+authors = [
+    {name = "LAVI Python contributors"}
+]
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+]
+
+[project.optional-dependencies]
+mne = ["mne"]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["lavi*"]
