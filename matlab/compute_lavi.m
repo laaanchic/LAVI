@@ -25,9 +25,19 @@ nT = size(spectrum,3);
 %     error('Number of frequencies in the data (dimension 2) and given frequencies do not match');
 % end
 LAVI = nan(nCH,1);
-width = round(lags./f*fs); % lag size in samples
-SIG0 = spectrum(:,1:end-width);
-SIG1 = spectrum(:,width+1:end);
+
+% Translate Lag to samples
+% % v1.0.0 (simple round) 
+% width = round(lags./f*fs); % lag size in samples
+% SIG0 = spectrum(:,1:end-width);
+% SIG1 = spectrum(:,width+1:end);
+
+% v1.0.1 weighted interpolation version (to avoid round error and saw-tooth in high frequencies)
+w  = lags./f*fs;                 % exact fractional lag in samples
+wi = floor(w);  fr = w - wi;     % integer part + fractional remainder
+SIG1 = (1-fr).*spectrum(:, wi+1:end-1) + fr.*spectrum(:, wi+2:end); % weighted interpolation
+SIG0 = spectrum(:, 1:size(SIG1,2));
+
 % remove NaNs
 nanind = squeeze(isnan(SIG0(1,:)) | isnan(SIG1(1,:)));
 SIG0(:,nanind) = [];
