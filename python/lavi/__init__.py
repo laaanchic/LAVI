@@ -14,6 +14,16 @@ from .spectra import (
     fit_gk,
 )
 
+"""Burst detection additions for the Python LAVI toolbox."""
+
+from .burst_helpers import (
+    get_burst_durations,
+    get_freq_span,
+    show_current_time,
+    wtpl_burst_durations,
+)
+from .bursts import BurstOutput, BurstParameters, detect_bursts_wtpl
+
 __all__ = [
     "compute_lavi",
     "prepare_lavi",
@@ -29,4 +39,11 @@ __all__ = [
     "pwelch_nan",
     "pwelch_to_amplitude",
     "fit_gk",
+    "BurstOutput",
+    "BurstParameters",
+    "detect_bursts_wtpl",
+    "get_burst_durations",
+    "get_freq_span",
+    "show_current_time",
+    "wtpl_burst_durations",
 ]

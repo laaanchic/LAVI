@@ -72,14 +72,32 @@ def compute_lavi(spectrum: ArrayLike, fs: float, f: float, lags: float = 1.5) ->
         raise ValueError("spectrum must have shape (n_channels, n_times) or (n_channels, 1, n_times)")
 
     n_ch, n_t = spec.shape
+
+    # Translate Lag to samples
+    # v1.0.0 (simple round)
     # MATLAB uses round() with halves away from zero. This can affect
     # the lag sample width at .5 boundaries, so keep MATLAB-style rounding.
-    width = int(matlab_round(lags / f * fs))
-    if width <= 0 or width >= n_t:
+    #width = int(matlab_round(lags / f * fs))
+    #if width <= 0 or width >= n_t:
+        #return np.full(n_ch, np.nan)
+
+    #sig0 = spec[:, : n_t - width]
+    #sig1 = spec[:, width:]
+
+    # v1.0.1 weighted interpolation version (to avoid round error and saw-tooth in high frequencies)
+    width = lags / f * fs
+    width_int = int(np.floor(width))
+    width_frac = width - width_int
+
+    if width <= 0 or width_int + 1 >= n_t:
         return np.full(n_ch, np.nan)
 
-    sig0 = spec[:, : n_t - width]
-    sig1 = spec[:, width:]
+    sig1 = (
+        (1.0 - width_frac) * spec[:, width_int:-1]
+        + width_frac * spec[:, width_int + 1:]
+    )
+
+    sig0 = spec[:, :sig1.shape[1]]    
 
     # MATLAB removes NaNs based on channel 1 only.
     nanind = np.isnan(sig0[0, :]) | np.isnan(sig1[0, :])
@@ -92,8 +110,9 @@ def compute_lavi(spectrum: ArrayLike, fs: float, f: float, lags: float = 1.5) ->
     a1 = np.abs(sig1)
     numerator = np.sum(sig0 * np.conj(sig1), axis=1)
     denominator = np.sqrt(np.sum(a0 * a0, axis=1) * np.sum(a1 * a1, axis=1))
-    out = np.abs(numerator / denominator)
-    out[denominator == 0] = np.nan
+    out = np.full(n_ch, np.nan)
+    valid = denominator != 0
+    out[valid] = np.abs(numerator[valid] / denominator[valid])
 
     return out
 
